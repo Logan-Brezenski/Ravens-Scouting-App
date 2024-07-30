@@ -1,0 +1,49 @@
+.App {
+  text-align: left;
+}
+.PreMatch img {
+  position: relative;
+}
+.Button-custom {
+  color:green;
+  Height:32px
+
+}
+.App-title{
+  color:rgb(15, 0, 128);
+ 
+  
+}
+.avatar {
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    
+  }
+}
+
+.App-header {
+  background-color: black;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.App-link {
+  color: red;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(30deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
