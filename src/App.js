@@ -15,6 +15,168 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { ButtonBase, Typography} from '@mui/material';
 import fieldImage from './field_image.jpg';
+import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_NumberInput';
+import { styled } from '@mui/system';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
+  return (
+    <BaseNumberInput
+      slots={{
+        root: StyledInputRoot,
+        input: StyledInput,
+        incrementButton: StyledIncrementButton,
+        decrementButton: StyledDecrementButton,
+      }}
+      slotProps={{
+        incrementButton: {
+          children: <AddIcon fontSize="small" />,
+          className: 'increment',
+        },
+        decrementButton: {
+          children: <RemoveIcon fontSize="small" />,
+        },
+      }}
+      {...props}
+      ref={ref}
+    />
+  );
+});
+
+function QuantityInput() {
+  return <NumberInput aria-label="Quantity Input" min={0} max={10} />;
+}
+
+const blue = {
+  100: '#daecff',
+  200: '#b6daff',
+  300: '#66b2ff',
+  400: '#3399ff',
+  500: '#007fff',
+  600: '#0072e5',
+  700: '#0059B2',
+  800: '#004c99',
+};
+
+const grey = {
+  50: '#F3F6F9',
+  100: '#E5EAF2',
+  200: '#DAE2ED',
+  300: '#C7D0DD',
+  400: '#B0B8C4',
+  500: '#9DA8B7',
+  600: '#6B7A90',
+  700: '#434D5B',
+  800: '#303740',
+  900: '#1C2025',
+};
+
+const StyledInputRoot = styled('div')(
+  ({ theme }) => `
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 400;
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[500]};
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+`,
+);
+
+const StyledInput = styled('input')(
+  ({ theme }) => `
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 1.375;
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  background: ${theme.palette.mode === 'dark' ? '#333' : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+  box-shadow: 0px 2px 4px ${
+    theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.5)' : 'rgba(0,0,0, 0.05)'
+  };
+  border-radius: 8px;
+  margin: 0 8px;
+  padding: 10px 12px;
+  outline: 0;
+  min-width: 0;
+  width: 4rem;
+  text-align: center;
+
+  &:hover {
+    border-color: ${blue[400]};
+  }
+
+  &:focus {
+    border-color: ${blue[400]};
+    box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[700] : blue[200]};
+  }
+
+  &:focus-visible {
+    outline: 0;
+  }
+`,
+);
+
+const StyledButton = styled('button')(
+  ({ theme }) => `
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  line-height: 1.5;
+  border: 1px solid;
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 120ms;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus-visible {
+    outline: 0;
+  }
+
+  &.increment {
+    order: 1;
+  }
+`,
+);
+
+const StyledIncrementButton = styled(StyledButton)(
+  ({ theme }) => `
+  background: ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+  color: ${theme.palette.mode === 'dark' ? grey[200] : grey[900]};
+  border-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[200]};
+
+  &:hover {
+    background: ${theme.palette.mode === 'dark' ? 'green' : 'lightgreen'};
+    border-color: ${theme.palette.mode === 'dark' ? 'darkgreen' : 'green'};
+    color: ${grey[50]};
+  }
+`,
+);
+
+const StyledDecrementButton = styled(StyledButton)(
+  ({ theme }) => `
+  background: ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+  color: ${theme.palette.mode === 'dark' ? grey[200] : grey[900]};
+  border-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[200]};
+
+  &:hover {
+    background: ${theme.palette.mode === 'dark' ? 'red' : 'lightcoral'};
+    border-color: ${theme.palette.mode === 'dark' ? 'darkred' : 'red'};
+    color: ${grey[50]};
+  }
+`,
+);
 
 
 // Custom styles to make text blue
@@ -168,10 +330,18 @@ function PreMatch() {
     }));
   };
 
+  const [view2, setView2] = useState('signin2');
+
+  const handleSignIn2 = () => {
+    setView2('autonomous'); //FOR PREMATCH TO AUTO
+  };
   return (
     <div className="PreMatch">
       <header className="App-header">
-        <h1 className="App-title">PreMatch</h1>
+        
+      {view2 === 'signin2' && <h1 className="App-title">PreMatch</h1>}
+      {view2 === 'signin2' && (
+        <>
         <Event />
         <MatchLevel />
         <MatchNumber />
@@ -215,17 +385,27 @@ function PreMatch() {
          
           
         </Box> 
-        
+        <SignIn2 onSignIn2={handleSignIn2} /> 
+        </>
 
+      )}
+ {view2 === 'autonomous' && <Autonomous />}
       </header>
     </div>
   );
 }
-function Teleop(){ //start of page 2
+
+function Autonomous(){ //start of page 2
+
   return (
-    <div className="Teleop">
+    <div className="Autonomous">
       <header className="App-header">
         <h1 className="App-title">Teleop</h1>
+        <Typography variant="h6" style={{ color: 'blue' }}>Auto Scoring</Typography>
+        <img src= {fieldImage} alt="Auto Scoring" style={{ width: '300px', height: '200px'}} /> 
+        
+       <QuantityInput/>
+
         </header>
         </div>
   )
@@ -235,8 +415,20 @@ function SignIn({ onSignIn }) {
     <Button variant="contained" onClick={onSignIn} color="secondary">
       Sign In
     </Button>
+
+  );
+} 
+
+
+
+function SignIn2({ onSignIn2 }) { // next button for Prematch to Auto.!!!!!!!!!!!!!!!
+  return (
+    <Button variant="contained" onClick={onSignIn2} color="secondary" >
+      Next
+    </Button>
   );
 }
+
 
 export default function App() {
   const [view, setView] = useState('signin');
@@ -264,3 +456,4 @@ export default function App() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
+
