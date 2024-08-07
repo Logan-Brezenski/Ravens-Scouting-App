@@ -1,47 +1,69 @@
 // TBAInterface funcitons to pull data from TheBlueAlliance.com
-var teams = null;
-var schedule = null;
-var authKey = "HjMNhwf9ncNAtM2fe4W2tGae0wf8qjWKVRWqk9nQqbU3vTGejw59wypR85AvO7Jy";
-/**
- * Get list of teams in event
- *
- * @param {eventCode} eventCode the event code (i.e. 2020caln) to pull the team list
- */
-function getTeams(eventCode) {
-	if (authKey) {
-		var xmlhttp = new XMLHttpRequest();
-		var url = "https://www.thebluealliance.com/api/v3/event/" + eventCode + "/teams/simple";
-		xmlhttp.open("GET", url, true);
-		xmlhttp.setRequestHeader("X-TBA-Auth-Key", authKey);
-		xmlhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var response = this.responseText;
-				teams = JSON.parse(response);
-			}
-		};
-		// Send request
-		xmlhttp.send();
-	}
+import React, { useState, useEffect } from 'react';
+import { fetchEvents } from './api';  // Adjust the import based on your file structure
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+
+const textFieldStyles = {
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'purple',
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: 'blue',
+  },
+  '& .MuiFormLabel-root': {
+    color: 'blue',
+  },
+  '& .MuiFormControlLabel-label': {
+    color: 'blue',
+  }
+};
+
+const inputPropsStyles = {
+  style: {
+    color: 'blue',
+  },
+};
+
+function Event() {
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState('');
+
+  useEffect(() => {
+    const getEvents = async () => {
+      const eventList = await fetchEvents();
+      setEvents(eventList);
+    };
+    getEvents();
+  }, []);
+
+  const handleEventChange = (event) => {
+    setSelectedEvent(event.target.value);
+  };
+
+  return (
+    <TextField
+      select
+      required
+      id="outlined-required"
+      label="Event"
+      value={selectedEvent}
+      onChange={handleEventChange}
+      variant="outlined"
+      color="secondary"
+      className="Event"
+      sx={textFieldStyles}
+      InputProps={inputPropsStyles}
+    >
+      {events.map((event) => (
+        <MenuItem key={event.key} value={event.key}>
+          {event.name}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
 }
 
-/**
- * Get schefule for event
- *
- * @param {eventCode} eventCode the event code (i.e. 2020caln) to pull the team list
- */
-function getSchedule(eventCode) {
-	if (authKey) {
-		var xmlhttp = new XMLHttpRequest();
-		var url = "https://www.thebluealliance.com/api/v3/event/" + eventCode + "/matches/simple";
-		xmlhttp.open("GET", url, true);
-		xmlhttp.setRequestHeader("X-TBA-Auth-Key", authKey);
-		xmlhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var response = this.responseText;
-				schedule = JSON.parse(response);
-			}
-		};
-		// Send request
-		xmlhttp.send();
-	}
-}
+export default Event;
